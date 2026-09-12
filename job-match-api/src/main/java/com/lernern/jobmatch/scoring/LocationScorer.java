@@ -14,18 +14,35 @@ public class LocationScorer {
             Candidate candidate,
             Job job) {
 
-        if (candidate.getLocation() != null
-                && job.getLocation() != null
-                && candidate.getLocation()
-                .equalsIgnoreCase(job.getLocation())) {
+        String candidateLocation =
+                normalize(candidate.getLocation());
+
+        String jobLocation =
+                normalize(job.getLocation());
+
+        // Same location
+        if (!candidateLocation.isEmpty()
+                && !jobLocation.isEmpty()
+                && candidateLocation.equals(jobLocation)) {
 
             return MAX_SCORE;
         }
 
+        // Different location but remote is allowed
         if (job.isRemoteAllowed()) {
             return REMOTE_SCORE;
         }
 
+        // Different location and remote is not allowed
         return 0.0;
+    }
+
+    private String normalize(String location) {
+
+        if (location == null) {
+            return "";
+        }
+
+        return location.trim().toLowerCase();
     }
 }

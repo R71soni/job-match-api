@@ -4,7 +4,7 @@ import com.lernern.jobmatch.entity.Candidate;
 import com.lernern.jobmatch.entity.Job;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LocationScorerTest {
 
@@ -12,7 +12,7 @@ class LocationScorerTest {
             new LocationScorer();
 
     @Test
-    void exactLocationShouldGetFullScore() {
+    void shouldGiveFullScoreForExactLocationMatch() {
 
         Candidate candidate = new Candidate();
         candidate.setLocation("Delhi");
@@ -22,30 +22,40 @@ class LocationScorerTest {
         job.setRemoteAllowed(false);
 
         double score =
-                locationScorer.calculateScore(
-                        candidate,
-                        job
-                );
+                locationScorer.calculateScore(candidate, job);
 
         assertEquals(15.0, score);
     }
 
     @Test
-    void remoteJobShouldGetRemoteScore() {
+    void shouldGiveRemoteScoreWhenLocationDoesNotMatch() {
 
         Candidate candidate = new Candidate();
         candidate.setLocation("Delhi");
 
         Job job = new Job();
-        job.setLocation("Bangalore");
+        job.setLocation("Mumbai");
         job.setRemoteAllowed(true);
 
         double score =
-                locationScorer.calculateScore(
-                        candidate,
-                        job
-                );
+                locationScorer.calculateScore(candidate, job);
 
         assertEquals(10.0, score);
+    }
+
+    @Test
+    void shouldGiveZeroForLocationMismatchWhenRemoteIsNotAllowed() {
+
+        Candidate candidate = new Candidate();
+        candidate.setLocation("Delhi");
+
+        Job job = new Job();
+        job.setLocation("Mumbai");
+        job.setRemoteAllowed(false);
+
+        double score =
+                locationScorer.calculateScore(candidate, job);
+
+        assertEquals(0.0, score);
     }
 }

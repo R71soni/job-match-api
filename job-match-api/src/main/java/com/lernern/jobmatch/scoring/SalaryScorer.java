@@ -14,54 +14,42 @@ public class SalaryScorer {
             Candidate candidate,
             Job job) {
 
-        double expectedSalary =
-                candidate.getExpectedSalary();
+        SalaryRange range = job.getSalaryRange();
 
-        SalaryRange range =
-                job.getSalaryRange();
-
+        // No salary range means no salary match score
         if (range == null) {
             return 0.0;
         }
 
-        double min = range.getMin();
-        double max = range.getMax();
+        double expectedSalary =
+                candidate.getExpectedSalary();
 
-        // Invalid salary range
-        if (min > max) {
-            return 0.0;
-        }
+        double min =
+                range.getMin();
 
-        // Job comfortably meets expectation
-        if (min >= expectedSalary) {
+        double max =
+                range.getMax();
+
+        // Expected salary is within or below
+        // the job's range.
+        if (expectedSalary <= max) {
             return MAX_SCORE;
         }
 
-        // Candidate expectation is inside job range
-        if (expectedSalary >= min
-                && expectedSalary <= max) {
+        // Expected salary is higher than
+        // the job's maximum salary.
+        double gap =
+                expectedSalary - max;
 
-            return MAX_SCORE;
-        }
+        double salaryRangeSize =
+                Math.max(max - min, 1.0);
 
-        // Job maximum is below expectation
-        if (max < expectedSalary) {
+        double penalty =
+                gap / salaryRangeSize;
 
-            double gap =
-                    expectedSalary - max;
+        double score =
+                MAX_SCORE * (1.0 - penalty);
 
-            double rangeSize =
-                    Math.max(expectedSalary - min, 1);
-
-            double penalty =
-                    gap / rangeSize;
-
-            double score =
-                    MAX_SCORE * (1 - penalty);
-
-            return Math.max(score, 0.0);
-        }
-
-        return 0.0;
+        return Math.max(score, 0.0);
     }
 }

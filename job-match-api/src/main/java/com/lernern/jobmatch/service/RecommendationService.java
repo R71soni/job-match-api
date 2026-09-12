@@ -43,7 +43,8 @@ public class RecommendationService {
                 .findById(candidateId)
                 .orElseThrow(() ->
                         new CandidateNotFoundException(
-                                "Candidate not found"));
+                                "Candidate not found with id: " + candidateId
+                        ));
 
         // 2. Get all jobs
         List<Job> jobs = jobRepository.findAll();
@@ -55,19 +56,22 @@ public class RecommendationService {
                 .filter(job ->
                         skillScorer.hasAllMustHaveSkills(
                                 candidate,
-                                job))
+                                job
+                        ))
 
-                // 5. Convert Job -> RecommendationResponse
+                // 5. Calculate score and create response
                 .map(job -> {
 
                     ScoreBreakdown breakdown =
                             jobScoringService.calculateBreakdown(
                                     candidate,
-                                    job);
+                                    job
+                            );
 
                     double overallScore =
                             jobScoringService.calculateOverallScore(
-                                    breakdown);
+                                    breakdown
+                            );
 
                     return new RecommendationResponse(
                             job,
@@ -83,7 +87,7 @@ public class RecommendationService {
                         ).reversed()
                 )
 
-                // 7. Top N
+                // 7. Top N recommendations
                 .limit(limit)
 
                 .toList();

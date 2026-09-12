@@ -11,20 +11,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SkillScorerTest {
 
-    private final SkillScorer skillScorer = new SkillScorer();
+    private final SkillScorer skillScorer =
+            new SkillScorer();
 
     @Test
     void shouldRejectJobWhenMustHaveSkillIsMissing() {
 
-        // Candidate has only Java
         Candidate candidate = new Candidate();
 
         candidate.setSkills(
                 List.of("Java")
         );
-
-        // Job requires Java and Spring Boot
-        Job job = new Job();
 
         RequiredSkill java = new RequiredSkill();
         java.setSkill("Java");
@@ -34,18 +31,18 @@ class SkillScorerTest {
         springBoot.setSkill("Spring Boot");
         springBoot.setType("MUST_HAVE");
 
+        Job job = new Job();
+
         job.setRequiredSkills(
                 List.of(java, springBoot)
         );
 
-        // Check
         boolean result =
                 skillScorer.hasAllMustHaveSkills(
                         candidate,
                         job
                 );
 
-        // Spring Boot is missing
         assertFalse(result);
     }
 
@@ -55,13 +52,8 @@ class SkillScorerTest {
         Candidate candidate = new Candidate();
 
         candidate.setSkills(
-                List.of(
-                        "Java",
-                        "Spring Boot"
-                )
+                List.of("Java", "Spring Boot")
         );
-
-        Job job = new Job();
 
         RequiredSkill java = new RequiredSkill();
         java.setSkill("Java");
@@ -70,6 +62,8 @@ class SkillScorerTest {
         RequiredSkill springBoot = new RequiredSkill();
         springBoot.setSkill("Spring Boot");
         springBoot.setType("MUST_HAVE");
+
+        Job job = new Job();
 
         job.setRequiredSkills(
                 List.of(java, springBoot)
@@ -85,19 +79,13 @@ class SkillScorerTest {
     }
 
     @Test
-    void niceToHaveSkillShouldIncreaseScore() {
+    void shouldGiveNiceToHaveBoost() {
 
         Candidate candidate = new Candidate();
 
         candidate.setSkills(
-                List.of(
-                        "Java",
-                        "Spring Boot",
-                        "SQL"
-                )
+                List.of("Java", "Spring Boot", "Angular")
         );
-
-        Job job = new Job();
 
         RequiredSkill java = new RequiredSkill();
         java.setSkill("Java");
@@ -107,12 +95,14 @@ class SkillScorerTest {
         springBoot.setSkill("Spring Boot");
         springBoot.setType("MUST_HAVE");
 
-        RequiredSkill sql = new RequiredSkill();
-        sql.setSkill("SQL");
-        sql.setType("NICE_TO_HAVE");
+        RequiredSkill angular = new RequiredSkill();
+        angular.setSkill("Angular");
+        angular.setType("NICE_TO_HAVE");
+
+        Job job = new Job();
 
         job.setRequiredSkills(
-                List.of(java, springBoot, sql)
+                List.of(java, springBoot, angular)
         );
 
         double score =
@@ -123,5 +113,48 @@ class SkillScorerTest {
 
         assertEquals(50.0, score);
     }
-}
 
+    @Test
+    void shouldNotRejectJobWhenNiceToHaveSkillIsMissing() {
+
+        Candidate candidate = new Candidate();
+
+        candidate.setSkills(
+                List.of("Java", "Spring Boot")
+        );
+
+        RequiredSkill java = new RequiredSkill();
+        java.setSkill("Java");
+        java.setType("MUST_HAVE");
+
+        RequiredSkill springBoot = new RequiredSkill();
+        springBoot.setSkill("Spring Boot");
+        springBoot.setType("MUST_HAVE");
+
+        RequiredSkill angular = new RequiredSkill();
+        angular.setSkill("Angular");
+        angular.setType("NICE_TO_HAVE");
+
+        Job job = new Job();
+
+        job.setRequiredSkills(
+                List.of(java, springBoot, angular)
+        );
+
+        boolean result =
+                skillScorer.hasAllMustHaveSkills(
+                        candidate,
+                        job
+                );
+
+        assertTrue(result);
+
+        double score =
+                skillScorer.calculateScore(
+                        candidate,
+                        job
+                );
+
+        assertEquals(40.0, score);
+    }
+}

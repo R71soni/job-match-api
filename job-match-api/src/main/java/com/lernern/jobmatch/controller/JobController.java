@@ -2,7 +2,6 @@ package com.lernern.jobmatch.controller;
 
 import com.lernern.jobmatch.entity.Job;
 import com.lernern.jobmatch.service.JobService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +18,21 @@ public class JobController {
 
     @PostMapping
     public ResponseEntity<Job> createJob(
-            @Valid @RequestBody Job job) {
+            @RequestBody Job job) {
 
         Job savedJob = jobService.createJob(job);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(savedJob);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Job> getJob(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                jobService.getJobById(id)
+        );
     }
 }

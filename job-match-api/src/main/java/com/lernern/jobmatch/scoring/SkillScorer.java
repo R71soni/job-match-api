@@ -18,19 +18,16 @@ public class SkillScorer {
             Candidate candidate,
             Job job) {
 
-        Set<String> candidateSkills = new HashSet<>();
-
-        for (String skill : candidate.getSkills()) {
-            candidateSkills.add(skill.toLowerCase());
-        }
+        Set<String> candidateSkills = getCandidateSkills(candidate);
 
         for (RequiredSkill requiredSkill : job.getRequiredSkills()) {
 
             if ("MUST_HAVE".equalsIgnoreCase(requiredSkill.getType())) {
 
-                if (!candidateSkills.contains(
-                        requiredSkill.getSkill().toLowerCase())) {
+                String requiredSkillName =
+                        normalize(requiredSkill.getSkill());
 
+                if (!candidateSkills.contains(requiredSkillName)) {
                     return false;
                 }
             }
@@ -43,11 +40,7 @@ public class SkillScorer {
             Candidate candidate,
             Job job) {
 
-        Set<String> candidateSkills = new HashSet<>();
-
-        for (String skill : candidate.getSkills()) {
-            candidateSkills.add(skill.toLowerCase());
-        }
+        Set<String> candidateSkills = getCandidateSkills(candidate);
 
         int mustHaveTotal = 0;
         int mustHaveMatched = 0;
@@ -58,10 +51,9 @@ public class SkillScorer {
         for (RequiredSkill requiredSkill : job.getRequiredSkills()) {
 
             String skill =
-                    requiredSkill.getSkill().toLowerCase();
+                    normalize(requiredSkill.getSkill());
 
-            if ("MUST_HAVE".equalsIgnoreCase(
-                    requiredSkill.getType())) {
+            if ("MUST_HAVE".equalsIgnoreCase(requiredSkill.getType())) {
 
                 mustHaveTotal++;
 
@@ -97,5 +89,24 @@ public class SkillScorer {
         }
 
         return mustHaveScore + niceToHaveScore;
+    }
+
+    private Set<String> getCandidateSkills(
+            Candidate candidate) {
+
+        Set<String> skills = new HashSet<>();
+
+        for (String skill : candidate.getSkills()) {
+
+            if (skill != null && !skill.isBlank()) {
+                skills.add(normalize(skill));
+            }
+        }
+
+        return skills;
+    }
+
+    private String normalize(String skill) {
+        return skill.trim().toLowerCase();
     }
 }

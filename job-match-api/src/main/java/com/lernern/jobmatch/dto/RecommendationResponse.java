@@ -4,26 +4,21 @@ import com.lernern.jobmatch.entity.Job;
 
 public class RecommendationResponse {
 
-    private Job job;
-
+    private JobResponse job;
     private double overallScore;
-
     private ScoreBreakdown breakdown;
-
-    public RecommendationResponse() {
-    }
 
     public RecommendationResponse(
             Job job,
             double overallScore,
             ScoreBreakdown breakdown) {
 
-        this.job = job;
+        this.job = new JobResponse(job);
         this.overallScore = overallScore;
         this.breakdown = breakdown;
     }
 
-    public Job getJob() {
+    public JobResponse getJob() {
         return job;
     }
 

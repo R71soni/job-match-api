@@ -9,11 +9,20 @@ public class CandidateService {
 
     private final CandidateRepository candidateRepository;
 
-    public CandidateService(CandidateRepository candidateRepository) {
+    public CandidateService(
+            CandidateRepository candidateRepository) {
+
         this.candidateRepository = candidateRepository;
     }
 
     public Candidate createCandidate(Candidate candidate) {
         return candidateRepository.save(candidate);
+    }
+
+    public Candidate getCandidateById(Long id) {
+        return candidateRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Candidate not found with id: " + id));
     }
 }

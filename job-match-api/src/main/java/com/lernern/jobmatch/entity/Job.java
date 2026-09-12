@@ -4,46 +4,40 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "jobs")
 public class Job {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Job title is required")
+    @NotBlank(message = "title is required")
     private String title;
 
-    @NotNull(message = "Required skills are required")
-    @ElementCollection
-    private List<@Valid RequiredSkill> requiredSkills = new ArrayList<>();
-
-    @Min(
-            value = 0,
-            message = "Minimum experience cannot be negative"
-    )
+    @Min(value = 0, message = "minYearsExperience cannot be negative")
     private int minYearsExperience;
 
-    @NotBlank(message = "Job location is required")
+    @NotBlank(message = "location is required")
     private String location;
 
     private boolean remoteAllowed;
 
-    @NotNull(message = "Salary range is required")
+    @NotNull(message = "salaryRange is required")
     @Valid
-    @Embedded
+    @OneToOne(cascade = CascadeType.ALL)
     private SalaryRange salaryRange;
+
+    @NotEmpty(message = "requiredSkills must contain at least one skill")
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<@Valid RequiredSkill> requiredSkills;
 
     public Job() {
     }
-
-    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -59,14 +53,6 @@ public class Job {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public List<RequiredSkill> getRequiredSkills() {
-        return requiredSkills;
-    }
-
-    public void setRequiredSkills(List<RequiredSkill> requiredSkills) {
-        this.requiredSkills = requiredSkills;
     }
 
     public int getMinYearsExperience() {
@@ -99,5 +85,13 @@ public class Job {
 
     public void setSalaryRange(SalaryRange salaryRange) {
         this.salaryRange = salaryRange;
+    }
+
+    public List<RequiredSkill> getRequiredSkills() {
+        return requiredSkills;
+    }
+
+    public void setRequiredSkills(List<RequiredSkill> requiredSkills) {
+        this.requiredSkills = requiredSkills;
     }
 }

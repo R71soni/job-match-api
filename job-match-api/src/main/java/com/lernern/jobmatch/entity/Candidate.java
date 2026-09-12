@@ -1,11 +1,8 @@
 package com.lernern.jobmatch.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,20 +13,20 @@ public class Candidate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "name is required")
     private String name;
 
-    @NotNull(message = "Skills are required")
     @ElementCollection
-    private List<String> skills = new ArrayList<>();
+    @NotEmpty(message = "skills must contain at least one skill")
+    private List<String> skills;
 
-    @Min(value = 0, message = "Years of experience cannot be negative")
+    @Min(value = 0, message = "yearsOfExperience cannot be negative")
     private int yearsOfExperience;
 
-    @NotBlank(message = "Location is required")
+    @NotBlank(message = "location is required")
     private String location;
 
-    @Min(value = 0, message = "Expected salary cannot be negative")
+    @Positive(message = "expectedSalary must be greater than 0")
     private double expectedSalary;
 
     public Candidate() {

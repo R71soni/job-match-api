@@ -7,9 +7,6 @@ public class ScoreBreakdown {
     private double location;
     private double salary;
 
-    public ScoreBreakdown() {
-    }
-
     public ScoreBreakdown(
             double skills,
             double experience,

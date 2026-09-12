@@ -1,18 +1,32 @@
 package com.lernern.jobmatch.entity;
 
-import jakarta.persistence.Embeddable;
+import com.lernern.jobmatch.validation.ValidSalaryRange;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 
-@Embeddable
+@ValidSalaryRange
+@Entity
 public class SalaryRange {
 
-    @Min(value = 0, message = "Minimum salary cannot be negative")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Min(value = 0, message = "salary min cannot be negative")
     private double min;
 
-    @Min(value = 0, message = "Maximum salary cannot be negative")
+    @Min(value = 0, message = "salary max cannot be negative")
     private double max;
 
     public SalaryRange() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public double getMin() {
