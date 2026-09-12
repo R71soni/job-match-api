@@ -26,6 +26,7 @@ public class JobController {
                 .status(HttpStatus.CREATED)
                 .body(savedJob);
     }
+<<<<<<< HEAD
 
     @GetMapping("/{id}")
     public ResponseEntity<Job> getJob(
@@ -35,4 +36,6 @@ public class JobController {
                 jobService.getJobById(id)
         );
     }
+=======
+>>>>>>> d5e521b (Add job creation API)
 }
