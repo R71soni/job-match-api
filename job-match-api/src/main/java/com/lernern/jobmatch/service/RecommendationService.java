@@ -4,6 +4,7 @@ import com.lernern.jobmatch.dto.RecommendationResponse;
 import com.lernern.jobmatch.dto.ScoreBreakdown;
 import com.lernern.jobmatch.entity.Candidate;
 import com.lernern.jobmatch.entity.Job;
+import com.lernern.jobmatch.exception.CandidateNotFoundException;
 import com.lernern.jobmatch.repository.CandidateRepository;
 import com.lernern.jobmatch.repository.JobRepository;
 import com.lernern.jobmatch.scoring.JobScoringService;
@@ -37,35 +38,35 @@ public class RecommendationService {
             Long candidateId,
             int limit) {
 
-        // 1. Find candidate
         Candidate candidate = candidateRepository
                 .findById(candidateId)
                 .orElseThrow(() ->
-                        new RuntimeException("Candidate not found"));
+                        new CandidateNotFoundException(
+                                "Candidate not found with id: " + candidateId
+                        )
+                );
 
-        // 2. Get all jobs
         List<Job> jobs = jobRepository.findAll();
 
-        // 3. Score eligible jobs
         return jobs.stream()
-
-                // 4. Hard filter: must-have skills
                 .filter(job ->
                         skillScorer.hasAllMustHaveSkills(
                                 candidate,
-                                job))
-
-                // 5. Convert Job -> RecommendationResponse
+                                job
+                        )
+                )
                 .map(job -> {
 
                     ScoreBreakdown breakdown =
                             jobScoringService.calculateBreakdown(
                                     candidate,
-                                    job);
+                                    job
+                            );
 
                     double overallScore =
                             jobScoringService.calculateOverallScore(
-                                    breakdown);
+                                    breakdown
+                            );
 
                     return new RecommendationResponse(
                             job,
@@ -73,17 +74,12 @@ public class RecommendationService {
                             breakdown
                     );
                 })
-
-                // 6. Highest score first
                 .sorted(
                         Comparator.comparingDouble(
                                 RecommendationResponse::getOverallScore
                         ).reversed()
                 )
-
-                // 7. Top N
                 .limit(limit)
-
                 .toList();
     }
 }

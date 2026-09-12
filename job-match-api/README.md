@@ -1,74 +1,57 @@
 # Job Match API
 
-## Project Overview
+A Spring Boot REST API that recommends jobs to candidates based on:
 
-Job Match API is a Spring Boot REST API that recommends jobs to candidates
-based on skills, experience, location, and salary fit.
+- Skills
+- Experience
+- Location
+- Expected salary
 
-The API calculates a transparent match score from 0 to 100 and returns
-ranked job recommendations for a candidate.
-
-The recommendation engine is rule-based and deterministic. No machine
-learning or collaborative filtering is used, making the scoring logic
-easy to understand, test, and explain.
-
----
-
-## Key Features
-
-- Create a candidate profile
-- Retrieve a candidate by ID
-- Create a job posting
-- Retrieve a job by ID
-- Delete a job
-- Get ranked job recommendations
-- Support top-N recommendations using the `limit` query parameter
-- MUST_HAVE skill hard filtering
-- NICE_TO_HAVE skill scoring
-- Experience-based scoring
-- Location-based scoring
-- Salary compatibility scoring
-- Request validation
-- Custom salary range validation
-- Global exception handling
-- PostgreSQL persistence
-- Unit tests for scoring logic
+The API ranks matching jobs using a transparent scoring system from **0 to 100**.
 
 ---
 
 ## Tech Stack
 
-- Java 25
-- Spring Boot 4.1.1
-- Spring Web
+- Java 21+
+- Spring Boot
 - Spring Data JPA
-- Hibernate
-- Jakarta Validation
 - PostgreSQL
 - Maven
 - JUnit 5
 - Mockito
-- Git / GitHub
 
 ---
 
-# Scoring Formula
+## Features
 
-The recommendation score is calculated out of 100 points.
+### Candidate APIs
 
-| Factor | Maximum Score |
-|---|---:|
-| Skills | 50 |
-| Experience | 20 |
-| Location | 15 |
-| Salary | 15 |
-| **Total** | **100** |
+Create a candidate with:
 
-The overall score is:
+- Name
+- Skills
+- Years of experience
+- Location
+- Expected salary
+
+### Job APIs
+
+Create a job with:
+
+- Job title
+- Required skills
+- MUST_HAVE / NICE_TO_HAVE skill types
+- Minimum experience
+- Location
+- Remote availability
+- Salary range
+
+### Recommendation API
+
+Returns jobs ranked by matching score.
+
+Example:
 
 ```text
-Overall Score =
-Skills Score
-+ Experience Score
-+ Location Score
-+ Salary Score
+GET /recommendations/{candidateId}?limit=10
