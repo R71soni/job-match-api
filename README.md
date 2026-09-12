@@ -21,7 +21,7 @@ A Spring Boot REST API that recommends suitable jobs to candidates based on **sk
 
 ## 🛠️ Tech Stack
 
-* **Java 25**
+* **Java 21**
 * **Spring Boot 4.1.1**
 * **Spring Data JPA**
 * **Hibernate**
