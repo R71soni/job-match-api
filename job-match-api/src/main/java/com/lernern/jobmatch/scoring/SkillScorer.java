@@ -18,16 +18,30 @@ public class SkillScorer {
             Candidate candidate,
             Job job) {
 
-        Set<String> candidateSkills = getCandidateSkills(candidate);
+        Set<String> candidateSkills = new HashSet<>();
+
+        if (candidate.getSkills() != null) {
+            for (String skill : candidate.getSkills()) {
+                if (skill != null) {
+                    candidateSkills.add(skill.trim().toLowerCase());
+                }
+            }
+        }
+
+        if (job.getRequiredSkills() == null) {
+            return true;
+        }
 
         for (RequiredSkill requiredSkill : job.getRequiredSkills()) {
 
             if ("MUST_HAVE".equalsIgnoreCase(requiredSkill.getType())) {
 
-                String requiredSkillName =
-                        normalize(requiredSkill.getSkill());
+                String skill = requiredSkill.getSkill();
 
-                if (!candidateSkills.contains(requiredSkillName)) {
+                if (skill == null
+                        || !candidateSkills.contains(
+                        skill.trim().toLowerCase())) {
+
                     return false;
                 }
             }
@@ -40,7 +54,15 @@ public class SkillScorer {
             Candidate candidate,
             Job job) {
 
-        Set<String> candidateSkills = getCandidateSkills(candidate);
+        Set<String> candidateSkills = new HashSet<>();
+
+        if (candidate.getSkills() != null) {
+            for (String skill : candidate.getSkills()) {
+                if (skill != null) {
+                    candidateSkills.add(skill.trim().toLowerCase());
+                }
+            }
+        }
 
         int mustHaveTotal = 0;
         int mustHaveMatched = 0;
@@ -48,12 +70,26 @@ public class SkillScorer {
         int niceToHaveTotal = 0;
         int niceToHaveMatched = 0;
 
+        if (job.getRequiredSkills() == null) {
+            return 0.0;
+        }
+
         for (RequiredSkill requiredSkill : job.getRequiredSkills()) {
 
-            String skill =
-                    normalize(requiredSkill.getSkill());
+            if (requiredSkill == null) {
+                continue;
+            }
 
-            if ("MUST_HAVE".equalsIgnoreCase(requiredSkill.getType())) {
+            String skill = requiredSkill.getSkill();
+
+            if (skill == null) {
+                continue;
+            }
+
+            skill = skill.trim().toLowerCase();
+
+            if ("MUST_HAVE".equalsIgnoreCase(
+                    requiredSkill.getType())) {
 
                 mustHaveTotal++;
 
@@ -72,7 +108,7 @@ public class SkillScorer {
             }
         }
 
-        double mustHaveScore = 0;
+        double mustHaveScore = 0.0;
 
         if (mustHaveTotal > 0) {
             mustHaveScore =
@@ -80,7 +116,7 @@ public class SkillScorer {
                             * MUST_HAVE_WEIGHT;
         }
 
-        double niceToHaveScore = 0;
+        double niceToHaveScore = 0.0;
 
         if (niceToHaveTotal > 0) {
             niceToHaveScore =
@@ -89,24 +125,5 @@ public class SkillScorer {
         }
 
         return mustHaveScore + niceToHaveScore;
-    }
-
-    private Set<String> getCandidateSkills(
-            Candidate candidate) {
-
-        Set<String> skills = new HashSet<>();
-
-        for (String skill : candidate.getSkills()) {
-
-            if (skill != null && !skill.isBlank()) {
-                skills.add(normalize(skill));
-            }
-        }
-
-        return skills;
-    }
-
-    private String normalize(String skill) {
-        return skill.trim().toLowerCase();
     }
 }

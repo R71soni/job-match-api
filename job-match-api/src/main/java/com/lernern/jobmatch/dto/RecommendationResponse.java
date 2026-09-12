@@ -4,7 +4,7 @@ import com.lernern.jobmatch.entity.Job;
 
 public class RecommendationResponse {
 
-    private JobResponse job;
+    private Job job;
     private double overallScore;
     private ScoreBreakdown breakdown;
 
@@ -13,12 +13,12 @@ public class RecommendationResponse {
             double overallScore,
             ScoreBreakdown breakdown) {
 
-        this.job = new JobResponse(job);
+        this.job = job;
         this.overallScore = overallScore;
         this.breakdown = breakdown;
     }
 
-    public JobResponse getJob() {
+    public Job getJob() {
         return job;
     }
 
