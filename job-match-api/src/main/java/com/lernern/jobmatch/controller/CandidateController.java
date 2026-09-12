@@ -2,6 +2,7 @@ package com.lernern.jobmatch.controller;
 
 import com.lernern.jobmatch.entity.Candidate;
 import com.lernern.jobmatch.service.CandidateService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class CandidateController {
 
     @PostMapping
     public ResponseEntity<Candidate> createCandidate(
-            @RequestBody Candidate candidate) {
+            @Valid @RequestBody Candidate candidate) {
 
         Candidate savedCandidate =
                 candidateService.createCandidate(candidate);

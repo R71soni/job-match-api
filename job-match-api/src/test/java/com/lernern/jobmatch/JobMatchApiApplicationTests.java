@@ -1,4 +1,4 @@
-package job_match_api;
+package com.lernern.jobmatch;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

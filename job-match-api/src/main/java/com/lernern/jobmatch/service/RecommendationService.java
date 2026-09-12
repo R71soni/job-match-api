@@ -4,6 +4,7 @@ import com.lernern.jobmatch.dto.RecommendationResponse;
 import com.lernern.jobmatch.dto.ScoreBreakdown;
 import com.lernern.jobmatch.entity.Candidate;
 import com.lernern.jobmatch.entity.Job;
+import com.lernern.jobmatch.exception.CandidateNotFoundException;
 import com.lernern.jobmatch.repository.CandidateRepository;
 import com.lernern.jobmatch.repository.JobRepository;
 import com.lernern.jobmatch.scoring.JobScoringService;
@@ -41,7 +42,8 @@ public class RecommendationService {
         Candidate candidate = candidateRepository
                 .findById(candidateId)
                 .orElseThrow(() ->
-                        new RuntimeException("Candidate not found"));
+                        new CandidateNotFoundException(
+                                "Candidate not found"));
 
         // 2. Get all jobs
         List<Job> jobs = jobRepository.findAll();

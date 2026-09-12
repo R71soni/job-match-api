@@ -1,12 +1,15 @@
 package com.lernern.jobmatch.entity;
 
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotBlank;
 
 @Embeddable
 public class RequiredSkill {
 
+    @NotBlank(message = "Skill name is required")
     private String skill;
 
+    @NotBlank(message = "Skill type is required")
     private String type;
 
     public RequiredSkill() {
