@@ -1,15 +1,11 @@
 package com.lernern.jobmatch.entity;
 
 import jakarta.persistence.Embeddable;
-import jakarta.validation.constraints.Min;
 
 @Embeddable
 public class SalaryRange {
 
-    @Min(value = 0, message = "salary min cannot be negative")
     private double min;
-
-    @Min(value = 0, message = "salary max cannot be negative")
     private double max;
 
     public SalaryRange() {

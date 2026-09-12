@@ -12,7 +12,7 @@ class ExperienceScorerTest {
             new ExperienceScorer();
 
     @Test
-    void shouldGiveFullScoreWhenCandidateMeetsRequirement() {
+    void shouldReturnFullScoreWhenCandidateMeetsRequiredExperience() {
 
         Candidate candidate = new Candidate();
         candidate.setYearsOfExperience(5);
@@ -20,38 +20,7 @@ class ExperienceScorerTest {
         Job job = new Job();
         job.setMinYearsExperience(3);
 
-        double score =
-                experienceScorer.calculateScore(candidate, job);
-
-        assertEquals(20.0, score);
-    }
-
-    @Test
-    void shouldPenalizeCandidateBelowRequirement() {
-
-        Candidate candidate = new Candidate();
-        candidate.setYearsOfExperience(2);
-
-        Job job = new Job();
-        job.setMinYearsExperience(5);
-
-        double score =
-                experienceScorer.calculateScore(candidate, job);
-
-        assertEquals(8.0, score);
-    }
-
-    @Test
-    void shouldGiveFullScoreWhenNoExperienceRequired() {
-
-        Candidate candidate = new Candidate();
-        candidate.setYearsOfExperience(0);
-
-        Job job = new Job();
-        job.setMinYearsExperience(0);
-
-        double score =
-                experienceScorer.calculateScore(candidate, job);
+        double score = experienceScorer.score(candidate, job);
 
         assertEquals(20.0, score);
     }

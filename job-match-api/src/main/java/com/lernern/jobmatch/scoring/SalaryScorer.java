@@ -64,4 +64,8 @@ public class SalaryScorer {
 
         return 0.0;
     }
+
+    public double score(Candidate candidate, Job job) {
+        return calculateScore(candidate, job);
+    }
 }

@@ -45,4 +45,8 @@ public class LocationScorer {
 
         return location.trim().toLowerCase();
     }
+
+    public double score(Candidate candidate, Job job) {
+        return calculateScore(candidate, job);
+    }
 }

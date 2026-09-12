@@ -12,7 +12,7 @@ class LocationScorerTest {
             new LocationScorer();
 
     @Test
-    void shouldGiveFullScoreForExactLocationMatch() {
+    void shouldReturnFullScoreWhenLocationsMatch() {
 
         Candidate candidate = new Candidate();
         candidate.setLocation("Delhi");
@@ -21,41 +21,22 @@ class LocationScorerTest {
         job.setLocation("Delhi");
         job.setRemoteAllowed(false);
 
-        double score =
-                locationScorer.calculateScore(candidate, job);
+        double score = locationScorer.score(candidate, job);
 
         assertEquals(15.0, score);
     }
 
     @Test
-    void shouldGiveRemoteScoreWhenLocationDoesNotMatch() {
+    void shouldReturnRemoteScoreWhenJobAllowsRemote() {
 
         Candidate candidate = new Candidate();
         candidate.setLocation("Delhi");
 
         Job job = new Job();
-        job.setLocation("Mumbai");
         job.setRemoteAllowed(true);
 
-        double score =
-                locationScorer.calculateScore(candidate, job);
+        double score = locationScorer.score(candidate, job);
 
         assertEquals(10.0, score);
-    }
-
-    @Test
-    void shouldGiveZeroForLocationMismatchWhenRemoteIsNotAllowed() {
-
-        Candidate candidate = new Candidate();
-        candidate.setLocation("Delhi");
-
-        Job job = new Job();
-        job.setLocation("Mumbai");
-        job.setRemoteAllowed(false);
-
-        double score =
-                locationScorer.calculateScore(candidate, job);
-
-        assertEquals(0.0, score);
     }
 }

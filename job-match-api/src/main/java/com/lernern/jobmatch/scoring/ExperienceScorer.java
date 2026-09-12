@@ -17,7 +17,7 @@ public class ExperienceScorer {
                 Math.max(candidate.getYearsOfExperience(), 0);
 
         int requiredExperience =
-                job.getMinYearsExperience();
+                Math.max(job.getMinYearsExperience(), 0);
 
         // No experience required
         if (requiredExperience <= 0) {
@@ -31,10 +31,13 @@ public class ExperienceScorer {
 
         // Candidate has less experience
         double score =
-                ((double) candidateExperience
-                        / requiredExperience)
+                ((double) candidateExperience / requiredExperience)
                         * MAX_SCORE;
 
         return Math.max(score, 0.0);
+    }
+
+    public double score(Candidate candidate, Job job) {
+        return calculateScore(candidate, job);
     }
 }

@@ -2,6 +2,7 @@ package com.lernern.jobmatch.controller;
 
 import com.lernern.jobmatch.entity.Job;
 import com.lernern.jobmatch.service.JobService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class JobController {
 
     @PostMapping
     public ResponseEntity<Job> createJob(
-            @RequestBody Job job) {
+            @Valid @RequestBody Job job) {
 
         Job savedJob = jobService.createJob(job);
 
@@ -26,7 +27,6 @@ public class JobController {
                 .status(HttpStatus.CREATED)
                 .body(savedJob);
     }
-<<<<<<< HEAD
 
     @GetMapping("/{id}")
     public ResponseEntity<Job> getJob(
@@ -36,6 +36,4 @@ public class JobController {
                 jobService.getJobById(id)
         );
     }
-=======
->>>>>>> d5e521b (Add job creation API)
 }

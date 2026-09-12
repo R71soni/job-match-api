@@ -34,4 +34,20 @@ public class ScoreBreakdown {
     public double getSalary() {
         return salary;
     }
+
+    public double getSkillScore() {
+        return skills;
+    }
+
+    public double getExperienceScore() {
+        return experience;
+    }
+
+    public double getLocationScore() {
+        return location;
+    }
+
+    public double getSalaryScore() {
+        return salary;
+    }
 }
